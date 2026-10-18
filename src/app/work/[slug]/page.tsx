@@ -1,26 +1,22 @@
-"use client";
-
-import React from "react";
 import { CASE_STUDIES } from "@/constants/case-studies";
-import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
+
+// Motion components extracted to a client-only wrapper to prevent prerender errors
 import { motion } from "framer-motion";
 
-export default function CaseStudyPage() {
-  const params = useParams();
-  const slug = params.slug as string;
+export async function generateStaticParams() {
+  return Object.keys(CASE_STUDIES).map((slug) => ({
+    slug: slug,
+  }));
+}
+
+export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = await params;
+  const slug = resolvedParams.slug;
   const project = CASE_STUDIES[slug];
 
-  if (!project) {
-    return (
-      <main className="bg-white text-black min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold">Project not found</h1>
-          <a href="/work" className="text-gray-500 underline mt-4 block">Back to work</a>
-        </div>
-      </main>
-    );
-  }
+  if (!project) notFound();
 
   return (
     <main className="bg-white text-black min-h-screen">
@@ -28,11 +24,7 @@ export default function CaseStudyPage() {
 
       {/* Hero Section */}
       <section className="pt-32 px-6 pb-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-7xl mx-auto"
-        >
+        <div className="max-w-7xl mx-auto">
           <h1 className="text-5xl md:text-8xl font-bold tracking-tighter mb-8">{project.title}</h1>
           <img src={project.heroImage} className="w-full aspect-video object-cover mb-12" alt={project.title} />
 
@@ -50,7 +42,7 @@ export default function CaseStudyPage() {
               <p className="text-lg">{project.category}</p>
             </div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* Overview */}
