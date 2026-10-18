@@ -1,0 +1,9 @@
+export interface Project {
+  id: string;
+  title: string;
+  category: string;
+  year: string;
+  image: string;
+  description: string;
+  link: string;
+}
