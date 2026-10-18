@@ -1,19 +1,26 @@
+"use client";
+
+import React from "react";
 import { CASE_STUDIES } from "@/constants/case-studies";
-import { notFound } from "next/navigation";
+import { useParams } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import { motion } from "framer-motion";
 
-export async function generateStaticParams() {
-  return Object.keys(CASE_STUDIES).map((slug) => ({
-    slug: slug,
-  }));
-}
-
-export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default function CaseStudyPage() {
+  const params = useParams();
+  const slug = params.slug as string;
   const project = CASE_STUDIES[slug];
 
-  if (!project) notFound();
+  if (!project) {
+    return (
+      <main className="bg-white text-black min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold">Project not found</h1>
+          <a href="/work" className="text-gray-500 underline mt-4 block">Back to work</a>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="bg-white text-black min-h-screen">
