@@ -1,8 +1,13 @@
 import { CASE_STUDIES } from "@/constants/case-studies";
 import { notFound } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
-import CaseStudyLayout from "@/components/layout/CaseStudyLayout"; // I'll implement a simplified version inside the page
 import { motion } from "framer-motion";
+
+export async function generateStaticParams() {
+  return Object.keys(CASE_STUDIES).map((slug) => ({
+    slug: slug,
+  }));
+}
 
 export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
